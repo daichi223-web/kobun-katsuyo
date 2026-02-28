@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { FORM_PAIRS } from "../../data/form-pairs.ts";
 import { FORM_HEX_MAP, SIX_FORMS_OVERVIEW } from "../../data/constants.ts";
+import type { VerbForm } from "../../types/core.ts";
 
 export function PairsPhase() {
   const [pairIdx, setPairIdx] = useState(0);
   const [showDetail, setShowDetail] = useState(false);
+  const [openForm, setOpenForm] = useState<VerbForm | null>(null);
   const pair = FORM_PAIRS[pairIdx];
   const leftColor = FORM_HEX_MAP[pair.left.form];
   const rightColor = FORM_HEX_MAP[pair.right.form];
@@ -124,44 +126,64 @@ export function PairsPhase() {
         )}
       </div>
 
-      {/* Six forms overview — all visible with staggered animation */}
+      {/* Six forms overview — tap to expand */}
       <div className="w-full bg-card border border-border rounded-xl p-4 shadow-sm">
         <div className="text-xs text-muted tracking-wider mb-3 text-center">
-          六つの活用形
+          六つの活用形　—　タップで解説
         </div>
-        <div className="flex flex-col gap-2">
-          {SIX_FORMS_OVERVIEW.map((f, i) => {
+        <div className="grid grid-cols-3 gap-1.5">
+          {SIX_FORMS_OVERVIEW.map((f) => {
             const fColor = FORM_HEX_MAP[f.form];
+            const isOpen = openForm === f.form;
             return (
-              <div
+              <button
                 key={f.form}
-                className="border-2 rounded-lg p-3 flex flex-col gap-1.5 opacity-0"
+                type="button"
+                onClick={() => setOpenForm(isOpen ? null : f.form)}
+                className="border-2 rounded-lg p-2 flex flex-col gap-0.5 text-left transition-all"
                 style={{
                   borderColor: fColor,
-                  backgroundColor: fColor + "0d",
-                  animation: `fadeSlideIn 0.4s ease-out ${i * 0.15}s forwards`,
+                  backgroundColor: isOpen ? fColor + "20" : fColor + "0d",
+                  boxShadow: isOpen ? `0 0 0 2px ${fColor}40` : "none",
                 }}
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-black" style={{ color: fColor }}>
-                    {f.form}
-                  </span>
-                  <span className="text-[10px] text-muted">{f.desc}</span>
-                  <span className="text-[10px] text-muted ml-auto">接続: {f.acc}</span>
-                </div>
-                <p className="text-xs text-sumi-dark leading-relaxed">
-                  {f.detail}
-                </p>
-                <div
-                  className="text-xs font-semibold px-2 py-0.5 rounded w-fit"
-                  style={{ color: fColor, backgroundColor: fColor + "18" }}
-                >
-                  {f.example}
-                </div>
-              </div>
+                <span className="text-xs font-black" style={{ color: fColor }}>
+                  {f.form}
+                </span>
+                <span className="text-[10px] text-text-secondary leading-tight">
+                  {f.desc}
+                </span>
+              </button>
             );
           })}
         </div>
+
+        {openForm && (() => {
+          const info = SIX_FORMS_OVERVIEW.find((f) => f.form === openForm)!;
+          const fColor = FORM_HEX_MAP[openForm];
+          return (
+            <div
+              className="mt-3 border-2 rounded-lg p-3 flex flex-col gap-2 animate-fade-in"
+              style={{ borderColor: fColor, backgroundColor: fColor + "10" }}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-base font-black" style={{ color: fColor }}>
+                  {info.form}
+                </span>
+                <span className="text-xs text-muted">接続: {info.acc}</span>
+              </div>
+              <p className="text-sm text-sumi-dark leading-relaxed">
+                {info.detail}
+              </p>
+              <div
+                className="text-sm font-semibold px-2 py-1 rounded w-fit"
+                style={{ color: fColor, backgroundColor: fColor + "18" }}
+              >
+                {info.example}
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
