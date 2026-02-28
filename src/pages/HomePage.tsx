@@ -40,7 +40,7 @@ export function HomePage() {
           <h2 className="text-xs text-muted tracking-widest">学習ステップ</h2>
           {LAYER_DEFINITIONS.map((layer) => {
             const key = `layer${layer.id}` as `layer${LayerId}`;
-            const mastery = progress?.layers[key].mastery ?? 0;
+            const mastery = progress?.layers[key]?.mastery ?? 0;
 
             return (
               <LayerBadge
