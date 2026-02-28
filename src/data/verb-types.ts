@@ -286,7 +286,7 @@ export const VERB_TYPES: VerbTypeEntry[] = [
     id: "ra-henkaku",
     type: "ラ行変格活用",
     representative: "あり",
-    stem: "",
+    stem: "あ",
     row: "ラ行",
     forms: {
       未然形: "ら",
