@@ -14,6 +14,7 @@ function createDefaultProgress(): UserProgress {
       layer1: { mastery: 0, completed: false },
       layer2: { mastery: 0, completed: false },
       layer3: { mastery: 0, completed: false },
+      layer4: { mastery: 0, completed: false },
     },
     weakItems: [],
     sessionHistory: [],

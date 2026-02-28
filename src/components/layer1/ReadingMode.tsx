@@ -19,10 +19,24 @@ const TEMPO_CONFIG: { key: Tempo; label: string; ms: number }[] = [
   { key: "fast", label: "速", ms: 1000 },
 ];
 
-/** Group verb types by conjugation type for the selector. */
-function uniqueTypes(): VerbTypeEntry[] {
+const TYPE_FILTERS: { key: string; label: string }[] = [
+  { key: "all", label: "すべて" },
+  { key: "四段活用", label: "四段" },
+  { key: "上二段活用", label: "上二段" },
+  { key: "下二段活用", label: "下二段" },
+  { key: "上一段活用", label: "上一段" },
+  { key: "下一段活用", label: "下一段" },
+  { key: "カ行変格活用", label: "カ変" },
+  { key: "サ行変格活用", label: "サ変" },
+  { key: "ナ行変格活用", label: "ナ変" },
+  { key: "ラ行変格活用", label: "ラ変" },
+];
+
+/** Get unique verbs, optionally filtered by type. */
+function getVerbs(typeFilter: string): VerbTypeEntry[] {
   const seen = new Set<string>();
   return VERB_TYPES.filter((v) => {
+    if (typeFilter !== "all" && v.type !== typeFilter) return false;
     if (seen.has(v.id)) return false;
     seen.add(v.id);
     return true;
@@ -30,19 +44,18 @@ function uniqueTypes(): VerbTypeEntry[] {
 }
 
 export function ReadingMode() {
-  const allVerbs = uniqueTypes();
+  const [typeFilter, setTypeFilter] = useState("all");
   const [verbIdx, setVerbIdx] = useState(0);
-  const [formIdx, setFormIdx] = useState(0);
+  const [focusIdx, setFocusIdx] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [completionCount, setCompletionCount] = useState(0);
   const [autoAdvance, setAutoAdvance] = useState(false);
   const [tempo, setTempo] = useState<Tempo>("normal");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const verb = allVerbs[verbIdx];
-  const currentForm = FORMS[formIdx];
-  const formColor = FORM_HEX_MAP[currentForm];
-  const formInfo = SIX_FORMS_OVERVIEW.find((f) => f.form === currentForm);
+  const allVerbs = getVerbs(typeFilter);
+  const verb = allVerbs[verbIdx] ?? allVerbs[0];
+  const currentForm = FORMS[focusIdx];
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -53,13 +66,13 @@ export function ReadingMode() {
 
   const advance = useCallback(() => {
     clearTimer();
-    if (formIdx < FORMS.length - 1) {
-      setFormIdx((i) => i + 1);
+    if (focusIdx < FORMS.length - 1) {
+      setFocusIdx((i) => i + 1);
     } else {
       setCompleted(true);
       setCompletionCount((c) => c + 1);
     }
-  }, [formIdx, clearTimer]);
+  }, [focusIdx, clearTimer]);
 
   // Auto-advance timer
   useEffect(() => {
@@ -67,13 +80,24 @@ export function ReadingMode() {
     const ms = TEMPO_CONFIG.find((t) => t.key === tempo)?.ms ?? 2000;
     timerRef.current = setTimeout(advance, ms);
     return clearTimer;
-  }, [autoAdvance, tempo, formIdx, completed, advance, clearTimer]);
+  }, [autoAdvance, tempo, focusIdx, completed, advance, clearTimer]);
 
   const handleVerbChange = useCallback(
     (idx: number) => {
       clearTimer();
       setVerbIdx(idx);
-      setFormIdx(0);
+      setFocusIdx(0);
+      setCompleted(false);
+    },
+    [clearTimer],
+  );
+
+  const handleTypeChange = useCallback(
+    (filter: string) => {
+      clearTimer();
+      setTypeFilter(filter);
+      setVerbIdx(0);
+      setFocusIdx(0);
       setCompleted(false);
     },
     [clearTimer],
@@ -81,13 +105,33 @@ export function ReadingMode() {
 
   const handleRestart = useCallback(() => {
     clearTimer();
-    setFormIdx(0);
+    setFocusIdx(0);
     setCompleted(false);
   }, [clearTimer]);
 
+  if (!verb) return null;
+
   return (
     <div className="flex flex-col gap-3">
-      {/* Verb type selector */}
+      {/* Type filter */}
+      <div className="flex gap-1 flex-wrap justify-center">
+        {TYPE_FILTERS.map((f) => (
+          <button
+            key={f.key}
+            type="button"
+            onClick={() => handleTypeChange(f.key)}
+            className={`px-2 py-0.5 border rounded text-[10px] transition-all ${
+              typeFilter === f.key
+                ? "bg-sumi-dark text-washi border-sumi-dark"
+                : "bg-transparent text-muted border-border hover:border-sumi-dark/50"
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Verb selector */}
       <div className="flex gap-1.5 flex-wrap justify-center">
         {allVerbs.map((v, i) => (
           <button
@@ -112,76 +156,95 @@ export function ReadingMode() {
         </span>
       </div>
 
-      {/* Main display card */}
-      {!completed ? (
-        <div
-          className="bg-card border-2 rounded-xl px-4 py-5 shadow-sm flex flex-col gap-3 items-center animate-fade-in"
-          style={{ borderColor: formColor }}
-          key={`${verb.id}-${formIdx}`}
-        >
-          {/* Form name */}
-          <div className="flex items-center gap-2">
-            <span
-              className="text-sm font-bold tracking-wider"
-              style={{ color: formColor }}
-            >
-              {currentForm}
-            </span>
-            <span className="text-xs text-muted">
-              {formIdx + 1} / {FORMS.length}
-            </span>
-          </div>
+      {/* All 6 forms displayed at once */}
+      <div className="flex flex-col gap-1.5">
+        {FORMS.map((form, i) => {
+          const formColor = FORM_HEX_MAP[form];
+          const isFocused = focusIdx === i && !completed;
+          const isPast = i < focusIdx || completed;
+          const formInfo = SIX_FORMS_OVERVIEW.find((f) => f.form === form);
 
-          {/* Large conjugation display */}
-          <div className="flex items-baseline gap-0.5">
-            <span className="text-2xl font-bold text-sumi-dark">
-              {verb.stem}
-            </span>
-            <span
-              className="text-3xl font-black"
-              style={{ color: formColor }}
-            >
-              {verb.forms[currentForm]}
-            </span>
-          </div>
-
-          {/* Function description */}
-          {formInfo && (
-            <div
-              className="rounded-lg px-3 py-1.5 text-xs text-center"
+          return (
+            <button
+              key={form}
+              type="button"
+              onClick={() => {
+                if (!completed) {
+                  setFocusIdx(i);
+                }
+              }}
+              className={`border-2 rounded-lg px-3 py-2.5 flex items-center gap-3 transition-all ${
+                isFocused ? "shadow-sm" : ""
+              }`}
               style={{
-                backgroundColor: formColor + "12",
-                color: formColor,
+                borderColor: isFocused ? formColor : isPast ? formColor + "50" : "#e0d8cc",
+                backgroundColor: isFocused ? formColor + "12" : "transparent",
+                opacity: isPast && !completed ? 0.6 : 1,
               }}
             >
-              {formInfo.desc} -- {formInfo.acc}
-            </div>
-          )}
+              {/* Form name */}
+              <span
+                className="text-xs font-bold w-12 shrink-0 text-left"
+                style={{ color: formColor }}
+              >
+                {form}
+              </span>
 
-          {/* Voice prompt */}
-          <p className="text-xs text-muted tracking-wider">
-            声に出してください
-          </p>
+              {/* Conjugated form */}
+              <div className="flex items-baseline gap-0.5">
+                <span className="text-lg font-bold text-sumi-dark">
+                  {verb.stem}
+                </span>
+                <span
+                  className="text-xl font-black"
+                  style={{ color: formColor }}
+                >
+                  {verb.forms[form]}
+                </span>
+              </div>
 
-          {/* Advance button */}
+              {/* Description */}
+              {formInfo && (
+                <span className="text-[10px] text-muted ml-auto shrink-0 hidden min-[360px]:inline">
+                  {formInfo.desc}
+                </span>
+              )}
+
+              {/* Focus indicator */}
+              {isFocused && (
+                <span className="text-xs ml-auto" style={{ color: formColor }}>
+                  ◀
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Voice prompt */}
+      {!completed && (
+        <p className="text-xs text-muted tracking-wider text-center">
+          声に出してください — {currentForm}
+        </p>
+      )}
+
+      {/* Action buttons */}
+      {!completed ? (
+        <div className="flex gap-2 justify-center">
           <button
             type="button"
             onClick={advance}
             className="bg-sumi-dark text-washi px-5 py-2 rounded-md text-sm tracking-wide"
           >
-            {formIdx < FORMS.length - 1 ? "次の形 →" : "完了"}
+            {focusIdx < FORMS.length - 1 ? "次の形 →" : "完了"}
           </button>
         </div>
       ) : (
-        /* Completion card */
-        <div className="bg-card border border-correct rounded-xl px-4 py-5 shadow-sm flex flex-col gap-3 items-center animate-slide-up">
+        <div className="flex flex-col gap-2 items-center animate-slide-up">
           <span className="text-lg font-bold text-correct">完了!</span>
           <span className="text-xs text-text-secondary">
-            {verb.representative}の六活用形を読み上げました
+            {verb.representative}の六活用形を読み上げました（通算 {completionCount} 回）
           </span>
-          <div className="text-xs text-muted">
-            通算 {completionCount} 回完了
-          </div>
           <div className="flex gap-2">
             <button
               type="button"
@@ -233,25 +296,6 @@ export function ReadingMode() {
           ))}
         </div>
       </div>
-
-      {/* Mini form overview strip */}
-      {!completed && (
-        <div className="flex gap-1 justify-center">
-          {FORMS.map((f, i) => {
-            const c = FORM_HEX_MAP[f];
-            return (
-              <div
-                key={f}
-                className="w-2 h-2 rounded-full transition-all"
-                style={{
-                  backgroundColor: i <= formIdx ? c : c + "30",
-                  transform: i === formIdx ? "scale(1.4)" : "scale(1)",
-                }}
-              />
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }

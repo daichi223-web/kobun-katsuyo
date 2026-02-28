@@ -1,4 +1,4 @@
-export type LayerId = 0 | 1 | 2 | 3;
+export type LayerId = 0 | 1 | 2 | 3 | 4;
 
 export type VerbForm =
   | "未然形"

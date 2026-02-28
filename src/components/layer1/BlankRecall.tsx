@@ -12,6 +12,19 @@ const FORMS: VerbForm[] = [
   "命令形",
 ];
 
+const TYPE_FILTERS: { key: string; label: string }[] = [
+  { key: "all", label: "すべて" },
+  { key: "四段活用", label: "四段" },
+  { key: "上二段活用", label: "上二段" },
+  { key: "下二段活用", label: "下二段" },
+  { key: "上一段活用", label: "上一段" },
+  { key: "下一段活用", label: "下一段" },
+  { key: "カ行変格活用", label: "カ変" },
+  { key: "サ行変格活用", label: "サ変" },
+  { key: "ナ行変格活用", label: "ナ変" },
+  { key: "ラ行変格活用", label: "ラ変" },
+];
+
 type FieldStatus = "pending" | "correct" | "incorrect";
 
 interface FieldState {
@@ -19,11 +32,17 @@ interface FieldState {
   status: FieldStatus;
 }
 
-function pickRandom(exclude?: string): VerbTypeEntry {
-  const candidates = exclude
-    ? VERB_TYPES.filter((v) => v.id !== exclude)
-    : VERB_TYPES;
-  return candidates[Math.floor(Math.random() * candidates.length)];
+function getFilteredVerbs(typeFilter: string): VerbTypeEntry[] {
+  if (typeFilter === "all") return VERB_TYPES;
+  return VERB_TYPES.filter((v) => v.type === typeFilter);
+}
+
+function pickRandom(candidates: VerbTypeEntry[], exclude?: string): VerbTypeEntry {
+  const filtered = exclude
+    ? candidates.filter((v) => v.id !== exclude)
+    : candidates;
+  const pool = filtered.length > 0 ? filtered : candidates;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function createEmptyFields(): Record<VerbForm, FieldState> {
@@ -33,7 +52,9 @@ function createEmptyFields(): Record<VerbForm, FieldState> {
 }
 
 export function BlankRecall() {
-  const [verb, setVerb] = useState<VerbTypeEntry>(() => pickRandom());
+  const [typeFilter, setTypeFilter] = useState("all");
+  const candidates = useMemo(() => getFilteredVerbs(typeFilter), [typeFilter]);
+  const [verb, setVerb] = useState<VerbTypeEntry>(() => pickRandom(candidates));
   const [fields, setFields] = useState<Record<VerbForm, FieldState>>(() =>
     createEmptyFields(),
   );
@@ -61,6 +82,17 @@ export function BlankRecall() {
       firstRetryRef.current = null;
     }
   }, [judged]);
+
+  const handleTypeChange = useCallback((filter: string) => {
+    setTypeFilter(filter);
+    const newCandidates = getFilteredVerbs(filter);
+    const newVerb = pickRandom(newCandidates);
+    setVerb(newVerb);
+    setFields(createEmptyFields());
+    setJudged(false);
+    setSessionCorrect(0);
+    setSessionTotal(0);
+  }, []);
 
   const handleChange = useCallback((form: VerbForm, value: string) => {
     setFields((prev) => ({
@@ -108,36 +140,32 @@ export function BlankRecall() {
   }, []);
 
   const handleNext = useCallback(() => {
-    // Count session stats based on final state
     const correctThisRound = FORMS.filter(
       (f) => fields[f].status === "correct",
     ).length;
     setSessionCorrect((c) => c + correctThisRound);
     setSessionTotal((t) => t + FORMS.length);
 
-    const next = pickRandom(verb.id);
+    const next = pickRandom(candidates, verb.id);
     setVerb(next);
     setFields(createEmptyFields());
     setJudged(false);
-    // Focus first input
     setTimeout(() => {
       const el = inputRefs.current["未然形"];
       if (el) el.focus();
     }, 50);
-  }, [verb.id, fields]);
+  }, [verb.id, fields, candidates]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent, form: VerbForm) => {
       if (e.key === "Enter") {
         const idx = FORMS.indexOf(form);
-        // Find next pending field
         for (let i = idx + 1; i < FORMS.length; i++) {
           if (fields[FORMS[i]].status === "pending") {
             inputRefs.current[FORMS[i]]?.focus();
             return;
           }
         }
-        // No more fields, trigger judge
         if (pendingCount > 0 || !judged) {
           handleJudge();
         }
@@ -148,6 +176,24 @@ export function BlankRecall() {
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Type filter */}
+      <div className="flex gap-1 flex-wrap justify-center">
+        {TYPE_FILTERS.map((f) => (
+          <button
+            key={f.key}
+            type="button"
+            onClick={() => handleTypeChange(f.key)}
+            className={`px-2 py-0.5 border rounded text-[10px] transition-all ${
+              typeFilter === f.key
+                ? "bg-sumi-dark text-washi border-sumi-dark"
+                : "bg-transparent text-muted border-border hover:border-sumi-dark/50"
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
       {/* Session stats */}
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted tracking-wider">
@@ -192,7 +238,6 @@ export function BlankRecall() {
                     : "bg-card border-border"
               }`}
             >
-              {/* Form label */}
               <span
                 className="text-xs font-bold w-14 shrink-0"
                 style={{ color }}
@@ -200,7 +245,6 @@ export function BlankRecall() {
                 {form}
               </span>
 
-              {/* Stem echo + input */}
               <span className="text-sm text-sumi-dark/50 shrink-0">
                 {verb.stem}
               </span>
@@ -237,7 +281,6 @@ export function BlankRecall() {
                 />
               )}
 
-              {/* Function description on correct */}
               {isCorrect && formInfo && (
                 <span className="text-[10px] text-muted shrink-0 hidden min-[360px]:inline">
                   {formInfo.desc}

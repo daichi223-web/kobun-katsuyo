@@ -59,45 +59,56 @@ export function AnimationPhase({ onNext }: AnimationPhaseProps) {
         ))}
       </div>
 
-      {/* Change card */}
-      <div className="bg-card border border-border rounded-xl px-5 py-4 w-full shadow-sm flex flex-col gap-3">
-        {/* Stem + Ending row */}
-        <div className="flex items-end gap-1">
-          <span className="text-4xl font-black text-sumi-dark">{verb.stem}</span>
-          <span
-            className="text-4xl font-black transition-all duration-300"
-            style={{
-              color,
-              opacity: animating ? 0 : 1,
-              transform: animating ? "translateY(-6px)" : "translateY(0)",
-            }}
-          >
-            {form.ending}
-          </span>
-          <span
-            className="text-2xl font-bold ml-2 transition-all duration-300"
-            style={{ color, opacity: animating ? 0 : 1 }}
-          >
+      {/* Causation card — 3-step display */}
+      <div className="bg-card border border-border rounded-xl px-4 py-4 w-full shadow-sm flex flex-col gap-3">
+        {/* Step 1: 後ろの語 */}
+        <div
+          className="flex items-center gap-2 transition-all duration-300"
+          style={{ opacity: animating ? 0 : 1 }}
+        >
+          <span className="text-[10px] text-muted w-16 shrink-0">① 後ろの語</span>
+          <span className="text-2xl font-black" style={{ color }}>
             {form.particle}
-            <span className="text-xs font-normal text-muted ml-1">
-              （{form.particleMeaning}）
-            </span>
+          </span>
+          <span className="text-xs text-muted">
+            （{form.particleMeaning}）
           </span>
         </div>
 
-        {/* Require box */}
+        {/* Step 2: 要求する形 */}
         <div
-          className="border-2 rounded-lg px-3 py-2 flex items-center gap-3 transition-all duration-300"
+          className="border-2 rounded-lg px-3 py-2 flex items-center gap-2 transition-all duration-300"
           style={{
             borderColor: color,
             backgroundColor: color + "15",
             opacity: animating ? 0 : 1,
           }}
         >
+          <span className="text-[10px] text-muted w-16 shrink-0">② 要求する形</span>
           <span className="text-lg font-black" style={{ color }}>
             {form.form}
           </span>
-          <span className="text-sm text-text-secondary">{form.meaning}</span>
+          <span className="text-xs text-text-secondary">{form.meaning}</span>
+        </div>
+
+        {/* Step 3: 結果 */}
+        <div
+          className="flex items-center gap-2 transition-all duration-300"
+          style={{ opacity: animating ? 0 : 1 }}
+        >
+          <span className="text-[10px] text-muted w-16 shrink-0">③ 結果</span>
+          <span className="text-3xl font-black text-sumi-dark">{verb.stem}</span>
+          <span className="text-lg text-muted">→</span>
+          <span className="text-3xl font-black text-sumi-dark">{verb.stem}</span>
+          <span
+            className="text-3xl font-black"
+            style={{ color }}
+          >
+            {form.ending}
+          </span>
+          <span className="text-xl font-bold ml-1" style={{ color }}>
+            {form.particle}
+          </span>
         </div>
       </div>
 

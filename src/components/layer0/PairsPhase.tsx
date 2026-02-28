@@ -137,7 +137,7 @@ export function PairsPhase() {
       {/* Six forms overview — tap to expand */}
       <div className="w-full bg-card border border-border rounded-xl p-4 shadow-sm">
         <div className="text-xs text-muted tracking-wider mb-3 text-center">
-          六つの活用形　—　タップで解説
+          六つの活用形 — タップで解説
         </div>
         <div className="grid grid-cols-3 gap-1.5">
           {SIX_FORMS_OVERVIEW.map((f) => {

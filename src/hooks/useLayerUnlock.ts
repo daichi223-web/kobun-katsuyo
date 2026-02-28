@@ -10,10 +10,11 @@ export function useLayerUnlock(progress: UserProgress | null) {
       1: false,
       2: false,
       3: false,
+      4: false,
     };
 
     if (progress) {
-      for (const id of [1, 2, 3] as LayerId[]) {
+      for (const id of [1, 2, 3, 4] as LayerId[]) {
         unlocked[id] = isLayerUnlocked(id, progress);
       }
     }

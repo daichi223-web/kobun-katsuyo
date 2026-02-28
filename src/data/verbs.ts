@@ -7,7 +7,7 @@ export const VERB_EXAMPLES: VerbExample[] = [
     type: "四段活用",
     forms: [
       { ending: "か", form: "未然形", particle: "ず", meaning: "まだそうでない", particleMeaning: "打消" },
-      { ending: "き", form: "連用形", particle: "けり", meaning: "動作が起きた後", particleMeaning: "過去" },
+      { ending: "き", form: "連用形", particle: "けり", meaning: "用言につながる", particleMeaning: "過去" },
       { ending: "く", form: "終止形", particle: "。", meaning: "述べて終わる", particleMeaning: "文末" },
       { ending: "く", form: "連体形", particle: "人", meaning: "名詞につながる", particleMeaning: "体言接続" },
       { ending: "け", form: "已然形", particle: "ば", meaning: "すでにそうだ", particleMeaning: "確定条件" },
@@ -20,7 +20,7 @@ export const VERB_EXAMPLES: VerbExample[] = [
     type: "上二段活用",
     forms: [
       { ending: "き", form: "未然形", particle: "ず", meaning: "まだそうでない", particleMeaning: "打消" },
-      { ending: "き", form: "連用形", particle: "けり", meaning: "動作が起きた後", particleMeaning: "過去" },
+      { ending: "き", form: "連用形", particle: "けり", meaning: "用言につながる", particleMeaning: "過去" },
       { ending: "く", form: "終止形", particle: "。", meaning: "述べて終わる", particleMeaning: "文末" },
       { ending: "くる", form: "連体形", particle: "人", meaning: "名詞につながる", particleMeaning: "体言接続" },
       { ending: "くれ", form: "已然形", particle: "ば", meaning: "すでにそうだ", particleMeaning: "確定条件" },
@@ -33,7 +33,7 @@ export const VERB_EXAMPLES: VerbExample[] = [
     type: "下二段活用",
     forms: [
       { ending: "て", form: "未然形", particle: "ず", meaning: "まだそうでない", particleMeaning: "打消" },
-      { ending: "て", form: "連用形", particle: "けり", meaning: "動作が起きた後", particleMeaning: "過去" },
+      { ending: "て", form: "連用形", particle: "けり", meaning: "用言につながる", particleMeaning: "過去" },
       { ending: "つ", form: "終止形", particle: "。", meaning: "述べて終わる", particleMeaning: "文末" },
       { ending: "つる", form: "連体形", particle: "人", meaning: "名詞につながる", particleMeaning: "体言接続" },
       { ending: "つれ", form: "已然形", particle: "ば", meaning: "すでにそうだ", particleMeaning: "確定条件" },

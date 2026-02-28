@@ -1,41 +1,61 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { TopBar } from "../components/layout/TopBar.tsx";
-import { ReadingMode } from "../components/layer1/ReadingMode.tsx";
-import { BlankRecall } from "../components/layer1/BlankRecall.tsx";
-import { TypeIdentification } from "../components/layer1/TypeIdentification.tsx";
+import { OverviewPhase } from "../components/layer1-types/OverviewPhase.tsx";
+import { MemorizePhase } from "../components/layer1-types/MemorizePhase.tsx";
+import { SummaryPhase } from "../components/layer1-types/SummaryPhase.tsx";
+import { useProgress } from "../hooks/useProgress.ts";
 
-type L1Mode = "reading" | "blank" | "identify";
-const MODES: { key: L1Mode; label: string }[] = [
-  { key: "reading", label: "音読" },
-  { key: "blank", label: "白紙再現" },
-  { key: "identify", label: "種類判別" },
+type L1Phase = "overview" | "memorize" | "summary";
+
+const PHASE_LABELS: { key: L1Phase; label: string }[] = [
+  { key: "overview", label: "一覧" },
+  { key: "memorize", label: "暗記" },
+  { key: "summary", label: "まとめ" },
 ];
 
 export function Layer1Page() {
-  const [mode, setMode] = useState<L1Mode>("reading");
+  const [phase, setPhase] = useState<L1Phase>("overview");
+  const { updateLayer } = useProgress();
+  const navigate = useNavigate();
+
+  const handleComplete = useCallback(async () => {
+    await updateLayer(1, { mastery: 100, completed: true });
+    navigate("/");
+  }, [updateLayer, navigate]);
+
   return (
     <>
-      <TopBar title="古文活用" subtitle="ステップ 1 — 活用形の練習" backTo="/" />
+      <TopBar title="古文活用" subtitle="ステップ 1 — 活用の種類" backTo="/" />
+
+      {/* Phase nav */}
       <div className="sticky top-14 z-40 bg-sumi-dark/95 backdrop-blur-sm px-4 py-2 flex gap-1 justify-center">
-        {MODES.map((m) => (
+        {PHASE_LABELS.map((p) => (
           <button
-            key={m.key}
+            key={p.key}
             type="button"
-            onClick={() => setMode(m.key)}
+            onClick={() => setPhase(p.key)}
             className={`px-4 py-1.5 border rounded text-xs font-semibold transition-all ${
-              mode === m.key
+              phase === p.key
                 ? "bg-muted text-washi border-muted"
                 : "bg-transparent text-muted border-sumi-dark/50 hover:border-muted"
             }`}
           >
-            {m.label}
+            {p.label}
           </button>
         ))}
       </div>
+
       <main className="px-4 py-4">
-        {mode === "reading" && <ReadingMode />}
-        {mode === "blank" && <BlankRecall />}
-        {mode === "identify" && <TypeIdentification />}
+        {phase === "overview" && (
+          <OverviewPhase onNext={() => setPhase("memorize")} />
+        )}
+        {phase === "memorize" && (
+          <MemorizePhase onNext={() => setPhase("summary")} />
+        )}
+        {phase === "summary" && (
+          <SummaryPhase onComplete={handleComplete} />
+        )}
       </main>
     </>
   );

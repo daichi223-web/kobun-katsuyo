@@ -5,6 +5,7 @@ import { Layer0Page } from "./pages/Layer0Page.tsx";
 import { Layer1Page } from "./pages/Layer1Page.tsx";
 import { Layer2Page } from "./pages/Layer2Page.tsx";
 import { Layer3Page } from "./pages/Layer3Page.tsx";
+import { Layer4Page } from "./pages/Layer4Page.tsx";
 import { ProgressPage } from "./pages/ProgressPage.tsx";
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="layer/1" element={<Layer1Page />} />
           <Route path="layer/2" element={<Layer2Page />} />
           <Route path="layer/3" element={<Layer3Page />} />
+          <Route path="layer/4" element={<Layer4Page />} />
           <Route path="progress" element={<ProgressPage />} />
         </Route>
       </Routes>
