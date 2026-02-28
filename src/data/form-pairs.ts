@@ -2,7 +2,7 @@ import type { FormPair } from "../types/verb.ts";
 
 export const FORM_PAIRS: FormPair[] = [
   {
-    left: { form: "未然形", desc: "まだそうでない", example: "書か（ず）" },
+    left: { form: "未然形", desc: "まだそうでない", example: "書か（ば）" },
     right: { form: "已然形", desc: "すでにそうだ", example: "書け（ば）" },
     contrast: "「ば」をつけると意味が逆になる",
     leftResult: "仮定「もし書くならば」",
