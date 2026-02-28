@@ -86,31 +86,29 @@ export function PairsPhase() {
 
         {showDetail && (
           <div className="w-full flex flex-col gap-3 animate-fade-in">
-            <div className="flex gap-2">
-              <div
-                className="flex-1 border-2 rounded-lg p-3 flex flex-col gap-1"
-                style={{
-                  borderColor: leftColor,
-                  backgroundColor: leftColor + "12",
-                }}
-              >
-                <span className="font-bold text-sm" style={{ color: leftColor }}>
-                  {pair.left.form}
-                </span>
-                <span className="text-xs text-sumi-dark">{pair.leftResult}</span>
-              </div>
-              <div
-                className="flex-1 border-2 rounded-lg p-3 flex flex-col gap-1"
-                style={{
-                  borderColor: rightColor,
-                  backgroundColor: rightColor + "12",
-                }}
-              >
-                <span className="font-bold text-sm" style={{ color: rightColor }}>
-                  {pair.right.form}
-                </span>
-                <span className="text-xs text-sumi-dark">{pair.rightResult}</span>
-              </div>
+            <div
+              className="border-2 rounded-lg p-3 flex flex-col gap-1"
+              style={{
+                borderColor: leftColor,
+                backgroundColor: leftColor + "12",
+              }}
+            >
+              <span className="font-bold text-sm" style={{ color: leftColor }}>
+                {pair.left.form}
+              </span>
+              <span className="text-xs text-sumi-dark leading-relaxed">{pair.leftResult}</span>
+            </div>
+            <div
+              className="border-2 rounded-lg p-3 flex flex-col gap-1"
+              style={{
+                borderColor: rightColor,
+                backgroundColor: rightColor + "12",
+              }}
+            >
+              <span className="font-bold text-sm" style={{ color: rightColor }}>
+                {pair.right.form}
+              </span>
+              <span className="text-xs text-sumi-dark leading-relaxed">{pair.rightResult}</span>
             </div>
 
             {pairIdx === 0 && (
@@ -120,6 +118,16 @@ export function PairsPhase() {
                 「雨降れ<strong>ば</strong>」（已然）→ 雨が降るので
                 <br />
                 <em className="text-muted">活用形だけが意味を変えている。</em>
+              </div>
+            )}
+
+            {pairIdx === 1 && (
+              <div className="bg-washi border border-border rounded-lg p-3 text-xs leading-loose text-sumi-dark">
+                「花<strong>咲き</strong>けり」→ 咲き＝連用形 → けり（過去）がつく → 花が咲いた
+                <br />
+                「花<strong>咲く</strong>野辺」→ 咲く＝連体形 → 野辺（名詞）を修飾 → 花が咲く野辺
+                <br />
+                <em className="text-muted">読解では、動詞の後ろに何が来ているかで連用形か連体形かを判断する。</em>
               </div>
             )}
           </div>
