@@ -27,7 +27,13 @@ export function useProgress() {
 
   useEffect(() => {
     get<UserProgress>(STORAGE_KEY).then((data) => {
-      setProgress(data ?? createDefaultProgress());
+      if (data) {
+        const defaults = createDefaultProgress();
+        data.layers = { ...defaults.layers, ...data.layers };
+        setProgress(data);
+      } else {
+        setProgress(createDefaultProgress());
+      }
       setLoading(false);
     });
   }, []);
