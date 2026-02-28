@@ -124,32 +124,40 @@ export function PairsPhase() {
         )}
       </div>
 
-      {/* Six forms overview */}
+      {/* Six forms overview — all visible with staggered animation */}
       <div className="w-full bg-card border border-border rounded-xl p-4 shadow-sm">
-        <div className="text-xs text-muted tracking-wider mb-2 text-center">
-          六形の全体像
+        <div className="text-xs text-muted tracking-wider mb-3 text-center">
+          六つの活用形
         </div>
-        <div className="grid grid-cols-3 gap-1.5">
-          {SIX_FORMS_OVERVIEW.map((f) => {
+        <div className="flex flex-col gap-2">
+          {SIX_FORMS_OVERVIEW.map((f, i) => {
             const fColor = FORM_HEX_MAP[f.form];
             return (
               <div
                 key={f.form}
-                className="border rounded-lg p-2 flex flex-col gap-0.5"
+                className="border-2 rounded-lg p-3 flex flex-col gap-1.5 opacity-0"
                 style={{
                   borderColor: fColor,
                   backgroundColor: fColor + "0d",
+                  animation: `fadeSlideIn 0.4s ease-out ${i * 0.15}s forwards`,
                 }}
               >
-                <span
-                  className="text-xs font-black"
-                  style={{ color: fColor }}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-black" style={{ color: fColor }}>
+                    {f.form}
+                  </span>
+                  <span className="text-[10px] text-muted">{f.desc}</span>
+                  <span className="text-[10px] text-muted ml-auto">接続: {f.acc}</span>
+                </div>
+                <p className="text-xs text-sumi-dark leading-relaxed">
+                  {f.detail}
+                </p>
+                <div
+                  className="text-xs font-semibold px-2 py-0.5 rounded w-fit"
+                  style={{ color: fColor, backgroundColor: fColor + "18" }}
                 >
-                  {f.form}
-                </span>
-                <span className="text-[10px] text-text-secondary leading-tight">
-                  {f.desc}
-                </span>
+                  {f.example}
+                </div>
               </div>
             );
           })}

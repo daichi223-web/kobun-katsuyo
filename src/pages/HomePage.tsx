@@ -37,7 +37,7 @@ export function HomePage() {
 
         {/* Layer map */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-xs text-muted tracking-widest">学習レイヤー</h2>
+          <h2 className="text-xs text-muted tracking-widest">学習ステップ</h2>
           {LAYER_DEFINITIONS.map((layer) => {
             const key = `layer${layer.id}` as `layer${LayerId}`;
             const mastery = progress?.layers[key].mastery ?? 0;

@@ -23,7 +23,7 @@ export function Layer0Page() {
     <>
       <TopBar
         title="古文活用"
-        subtitle="Layer 0 — 活用とは"
+        subtitle="ステップ 0 — 活用とは"
         backTo="/"
       />
 
@@ -50,7 +50,7 @@ export function Layer0Page() {
         {phase === "intro" && (
           <IntroPhase onNext={() => setPhase("animation")} />
         )}
-        {phase === "animation" && <AnimationPhase />}
+        {phase === "animation" && <AnimationPhase onNext={() => setPhase("pairs")} />}
         {phase === "pairs" && <PairsPhase />}
         {phase === "summary" && <SummaryPhase onComplete={handleComplete} />}
       </main>

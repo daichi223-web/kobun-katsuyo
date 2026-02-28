@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 
 const navItems = [
-  { to: "/", label: "ホーム", icon: "層" },
-  { to: "/progress", label: "進捗", icon: "績" },
+  { to: "/", label: "ホーム", icon: "🏠" },
+  { to: "/progress", label: "進捗", icon: "📊" },
 ] as const;
 
 export function BottomNav() {

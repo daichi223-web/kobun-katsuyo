@@ -2,7 +2,11 @@ import { useState, useCallback } from "react";
 import { VERB_EXAMPLES } from "../../data/verbs.ts";
 import { FORM_HEX_MAP } from "../../data/constants.ts";
 
-export function AnimationPhase() {
+interface AnimationPhaseProps {
+  onNext?: () => void;
+}
+
+export function AnimationPhase({ onNext }: AnimationPhaseProps) {
   const [verbIdx, setVerbIdx] = useState(0);
   const [formIdx, setFormIdx] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -31,7 +35,7 @@ export function AnimationPhase() {
         後ろの語が形を要求している
       </h2>
 
-      {/* Verb selector */}
+      {/* Type selector */}
       <div className="flex gap-2 flex-wrap justify-center">
         {VERB_EXAMPLES.map((v, i) => (
           <button
@@ -47,9 +51,9 @@ export function AnimationPhase() {
                 : "bg-card text-text-secondary border-border hover:border-sumi-dark"
             }`}
           >
-            {v.base}
+            {v.type}
             <span className="text-[10px] opacity-60 tracking-wide leading-none">
-              {v.type}
+              {v.base}
             </span>
           </button>
         ))}
@@ -127,7 +131,7 @@ export function AnimationPhase() {
           onClick={handleNextVerb}
           className="text-text-secondary border border-border px-4 py-2 rounded-md text-sm tracking-wide hover:border-sumi-dark"
         >
-          別の動詞
+          別の活用
         </button>
       </div>
 
@@ -158,6 +162,16 @@ export function AnimationPhase() {
           );
         })}
       </div>
+
+      {onNext && (
+        <button
+          type="button"
+          onClick={onNext}
+          className="mt-4 bg-sumi-dark text-washi px-6 py-3 rounded-lg text-sm font-bold tracking-wider w-full"
+        >
+          対比へ進む →
+        </button>
+      )}
     </div>
   );
 }

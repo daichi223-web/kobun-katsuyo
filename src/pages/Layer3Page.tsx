@@ -14,7 +14,7 @@ export function Layer3Page() {
 
   return (
     <>
-      <TopBar title="古文活用" subtitle="Layer 3 — 一文精読" backTo="/" />
+      <TopBar title="古文活用" subtitle="ステップ 3 — 一文精読" backTo="/" />
       <main className="px-4 py-3 flex flex-col gap-3">
         {/* Mode tabs */}
         <div className="flex gap-1.5 bg-card border border-border rounded-lg p-1 shadow-sm">

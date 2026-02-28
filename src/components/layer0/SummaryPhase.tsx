@@ -14,7 +14,7 @@ export function SummaryPhase({ onComplete }: SummaryPhaseProps) {
 
       {/* Core sentence */}
       <div className="bg-sumi-dark text-washi rounded-xl px-5 py-4 flex flex-col gap-1">
-        <span className="text-[11px] text-muted tracking-widest">核心</span>
+        <span className="text-[11px] text-muted tracking-widest">ポイント</span>
         <span className="text-base font-bold leading-relaxed tracking-wide">
           {CORE_SENTENCE}
         </span>
@@ -45,7 +45,7 @@ export function SummaryPhase({ onComplete }: SummaryPhaseProps) {
       <div className="bg-washi border border-border rounded-xl px-4 py-3 flex flex-col gap-1">
         <span className="text-[11px] text-muted tracking-widest">次のステップ</span>
         <div className="text-sm text-sumi-dark leading-relaxed font-semibold">
-          Layer 1：活用形の機能ドリルへ進む
+          次のステップ：活用形の機能ドリルへ進む
         </div>
         {onComplete && (
           <button
@@ -53,7 +53,7 @@ export function SummaryPhase({ onComplete }: SummaryPhaseProps) {
             onClick={onComplete}
             className="bg-sumi-dark text-washi px-6 py-2 rounded-md text-sm tracking-wide mt-2 self-start"
           >
-            Layer 0 完了 →
+            ステップ 0 完了 →
           </button>
         )}
       </div>

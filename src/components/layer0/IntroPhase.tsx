@@ -38,7 +38,7 @@ export function IntroPhase({ onNext }: IntroPhaseProps) {
           disabled={!done}
           className="bg-sumi-dark text-washi px-6 py-2.5 rounded-md text-sm tracking-wide transition-opacity disabled:opacity-30"
         >
-          変化を見てみる →
+          活用を見てみる →
         </button>
       </div>
 

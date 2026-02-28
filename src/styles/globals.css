@@ -47,6 +47,11 @@
   50% { opacity: 0; }
 }
 
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @layer base {
   body {
     font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;

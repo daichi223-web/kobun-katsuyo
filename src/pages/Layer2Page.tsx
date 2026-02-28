@@ -19,7 +19,7 @@ export function Layer2Page() {
 
   return (
     <>
-      <TopBar title="古文活用" subtitle="Layer 2 — 助動詞の習得" backTo="/" />
+      <TopBar title="古文活用" subtitle="ステップ 2 — 助動詞の習得" backTo="/" />
 
       {/* Mode nav */}
       <div className="sticky top-14 z-40 bg-sumi-dark/95 backdrop-blur-sm px-4 py-2 flex gap-1 justify-center">

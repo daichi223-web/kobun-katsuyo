@@ -50,7 +50,7 @@ export function LayerBadge({
             </>
           ) : (
             <span className="text-xs text-muted">
-              Layer {layerId - 1} 80%で解放
+              ステップ{layerId - 1} 80%で解放
             </span>
           )}
         </div>
