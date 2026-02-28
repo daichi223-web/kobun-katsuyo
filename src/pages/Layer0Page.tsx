@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { TopBar } from "../components/layout/TopBar.tsx";
 import { IntroPhase } from "../components/layer0/IntroPhase.tsx";
 import { AnimationPhase } from "../components/layer0/AnimationPhase.tsx";
@@ -13,11 +14,13 @@ const PHASES: L0Phase[] = ["intro", "animation", "pairs", "summary"];
 export function Layer0Page() {
   const [phase, setPhase] = useState<L0Phase>("intro");
   const { updateLayer } = useProgress();
+  const navigate = useNavigate();
   const phaseIdx = PHASES.indexOf(phase);
 
   const handleComplete = useCallback(async () => {
     await updateLayer(0, { mastery: 100, completed: true });
-  }, [updateLayer]);
+    navigate("/");
+  }, [updateLayer, navigate]);
 
   return (
     <>

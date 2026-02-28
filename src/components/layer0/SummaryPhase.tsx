@@ -25,10 +25,10 @@ export function SummaryPhase({ onComplete }: SummaryPhaseProps) {
         <div className="text-xs font-bold text-text-secondary tracking-wider border-b border-border pb-2">
           理解できたサイン
         </div>
-        <CheckItem text="活用表を見て「覚えなきゃ」ではなく「確認しよう」と思う" />
-        <CheckItem text="「ず」が付いているとき、なぜ未然形かを機能から説明できる" />
+        <CheckItem text="「語形が変わるのは、後ろの語が要求するから」と自分の言葉で言える" />
+        <CheckItem text="六つの活用形の名前を見て、それぞれ何をする形か説明できる" />
         <CheckItem text="未然形＋ば（仮定）と已然形＋ば（確定）の違いを即答できる" />
-        <CheckItem text="知らない語でも「ずが付いているから未然形」と動ける" />
+        <CheckItem text="連用形と連体形の違いを「後ろに何が来るか」で説明できる" />
       </div>
 
       {/* Warning checklist */}
@@ -36,16 +36,16 @@ export function SummaryPhase({ onComplete }: SummaryPhaseProps) {
         <div className="text-xs font-bold text-text-secondary tracking-wider border-b border-border pb-2">
           まだのサイン
         </div>
-        <CheckItem text="「ずは未然形接続」を言えるが、なぜかは言えない" warning />
-        <CheckItem text="活用形を名前で答えるが、その形が何をするかは言えない" warning />
-        <CheckItem text="「ば」の仮定と確定の区別に迷う" warning />
+        <CheckItem text="活用形の名前は言えるが、それぞれの役割は言えない" warning />
+        <CheckItem text="「未然形＋ば」と「已然形＋ば」のどちらが仮定かすぐ出てこない" warning />
+        <CheckItem text="活用表を「暗記するもの」だと思っている" warning />
       </div>
 
       {/* Next step */}
       <div className="bg-washi border border-border rounded-xl px-4 py-3 flex flex-col gap-1">
         <span className="text-[11px] text-muted tracking-widest">次のステップ</span>
         <div className="text-sm text-sumi-dark leading-relaxed font-semibold">
-          次のステップ：活用形の機能ドリルへ進む
+          活用形の練習ドリルへ進む
         </div>
         {onComplete && (
           <button
